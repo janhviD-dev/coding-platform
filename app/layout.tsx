@@ -1,14 +1,70 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import { Sora } from "next/font/google";import "./globals.css";
+import {
+  Italiana,
+  Indie_Flower,
+  Prata,
+  Bodoni_Moda,
+  Libre_Baskerville,
+  Cardo,
+  Raleway,
+  Tenor_Sans,
+  Syne,
+} from "next/font/google";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const sora = Sora({
+  variable: "--font-sora",
+  subsets: ["latin"],
+});
+const indieFlower = Indie_Flower({
+  variable: "--font-indie-flower",
+  subsets: ["latin"],
+  weight: "400",
+});
+
+
+const italiana = Italiana({
+  variable: "--font-italiana",
+  subsets: ["latin"],
+  weight: "400",
+});
+
+const prata = Prata({
+  variable: "--font-prata",
+  subsets: ["latin"],
+  weight: "400",
+});
+
+const bodoni = Bodoni_Moda({
+  variable: "--font-bodoni",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const libreBaskerville = Libre_Baskerville({
+  variable: "--font-libre",
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
+
+const cardo = Cardo({
+  variable: "--font-cardo",
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
+
+const raleway = Raleway({
+  variable: "--font-raleway",
+  subsets: ["latin"],
+});
+
+const tenorSans = Tenor_Sans({
+  variable: "--font-tenor",
+  subsets: ["latin"],
+  weight: "400",
+});
+
+const syne = Syne({
+  variable: "--font-syne",
   subsets: ["latin"],
 });
 
@@ -21,7 +77,20 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`
+    ${sora.variable}
+    ${italiana.variable}
+    ${prata.variable}
+    ${bodoni.variable}
+    ${libreBaskerville.variable}
+    ${cardo.variable}
+    ${raleway.variable}
+    ${tenorSans.variable}
+    ${syne.variable}
+    ${indieFlower.variable}
+    h-full
+    antialiased
+  `}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
