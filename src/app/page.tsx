@@ -3,10 +3,12 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Phone, Menu, TextAlignEnd } from "lucide-react";
 import { useEffect, useState } from "react";
+import { AnimatePresence } from "framer-motion";
 
 export default function Home() {
   const [isScrollingDown, setIsScrollingDown] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);  
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
@@ -53,7 +55,11 @@ export default function Home() {
     <>
       <main>
         <nav className="fixed top-5 left-0 w-full z-50 px-6">
-          <div className="max-w-7xl mx-auto relative h-16">
+          {/* Transparent positioning boundary: full width, fixed height, position:relative,
+              no background/border/shadow. Logo is anchored left-0, hamburger right-0 (both
+              absolute), so they can never overlap on mobile. Shared with desktop so the
+              logo (and its scroll animation) isn't duplicated. */}
+          <div className="max-w-7xl mx-auto relative w-full h-16">
             {/* LEFT/CENTER — Logo + Brand (animates between left and true center) */}
             <motion.div
               initial={false}
@@ -63,12 +69,11 @@ export default function Home() {
                 y: "-50%",
               }}
               transition={{
-                duration: 0.35,
-                ease: [0.76, 0, 0.24, 1],
+                duration: 0,
               }}
               className={`absolute top-1/2 flex items-center gap-4 transition-all duration-300 ${
                 isLogoCentered
-                  ? "bg-white rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] px-5 py-2"
+                  ? "bg-white rounded-full shadow-[0_8px_30px_rgba(0,0,0,0.12)] px-5 py-2"
                   : "bg-transparent px-0 py-0"
               }`}
             >
@@ -79,10 +84,13 @@ export default function Home() {
               />
 
               {/* Stylish Divider */}
-              <div className="h-7 w-px bg-white/25" />
-
+              <div
+                className={`h-7 w-px ${
+                  isLogoCentered ? "bg-black/40" : "bg-white/25"
+                }`}
+              />
               <span
-                className={`font-walter font-semibold tracking-wide leading-tight ${
+                className={`font-raleway font-bold tracking-wide leading-tight ${
                   isLogoCentered ? "text-primary" : "text-white"
                 }`}
               >
@@ -155,7 +163,7 @@ export default function Home() {
 
               {/* About */}
               <a
-                href="#"
+                href="/about"
                 className="px-4 py-2 rounded-full text-white/80 transition-all duration-300 group"
               >
                 <span className="relative block h-[1.4em] overflow-hidden">
@@ -339,19 +347,103 @@ export default function Home() {
                 Sign In
               </button>
             </motion.div>
+
+            {/* MOBILE HAMBURGER — positioned within the same invisible nav container as the logo, right-aligned and vertically centered */}
             <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="
     lg:hidden
-    fixed
-    top-5
-    right-5
+    absolute
+    cursor-pointer
+    right-0
+    top-1/2
+    -translate-y-1/2
     z-50
     text-white
     p-2
   "
             >
-              <TextAlignEnd size={24} strokeWidth={1.5} />
+              {isMenuOpen ? (
+                <span className="text-2xl">×</span>
+              ) : (
+                <TextAlignEnd size={24} strokeWidth={1.5} />
+              )}{" "}
             </button>
+            <AnimatePresence>
+              {isMenuOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -20, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -20, scale: 0.98 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  className="
+        lg:hidden
+        absolute
+        top-0
+        right-0
+        w-full
+        min-h-[85vh]
+        rounded-3xl
+        bg-[#090843]/95
+        backdrop-blur-2xl
+        border border-white/10
+        shadow-[0_20px_60px_rgba(0,0,0,0.35)]
+        p-8
+        pt-24
+        z-40
+      "
+                >
+                  <div className="flex flex-col gap-2">
+                    {["Home", "About", "Courses", "Mentors", "Contact"].map(
+                      (item, index) => (
+                        <motion.a
+                          key={item}
+                          href={`#${item.toLowerCase()}`}
+                          initial={{ opacity: 0, x: 30 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{
+                            delay: index * 0.07,
+                            duration: 0.3,
+                          }}
+                          onClick={() => setIsMenuOpen(false)}
+                          className="
+                py-4
+                text-3xl
+                font-raleway
+                font-medium
+                text-white
+                border-b
+                border-white/10
+              "
+                        >
+                          {item}
+                        </motion.a>
+                      ),
+                    )}
+
+                    <motion.button
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.4 }}
+                      onClick={() => setIsMenuOpen(false)}
+                      className="
+            mt-8
+            w-full
+            rounded-full
+            bg-secondary
+            px-6
+            py-4
+            text-lg
+            font-semibold
+            text-primary
+          "
+                    >
+                      Start Your Journey →
+                    </motion.button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </nav>
 
@@ -504,7 +596,7 @@ export default function Home() {
     sm:text-xl
     md:text-2xl
     text-center
-    font-walter
+    font-flamenco
     leading-relaxed
     mt-6
     sm:mt-8
