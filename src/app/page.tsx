@@ -1,120 +1,356 @@
-"use client"
+"use client";
 import Image from "next/image";
 import { motion } from "framer-motion";
-
+import { Phone, Menu, TextAlignEnd } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [isScrollingDown, setIsScrollingDown] = useState(false);
+  const [isLargeScreen, setIsLargeScreen] = useState(false);
+
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > lastScrollY && currentScrollY > 50) {
+        setIsScrollingDown(true);
+      } else if (currentScrollY < lastScrollY) {
+        setIsScrollingDown(false);
+      }
+
+      lastScrollY = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  // Logo center-scroll animation only applies from the tablet/desktop (lg) breakpoint up.
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 1024px)");
+
+    setIsLargeScreen(mediaQuery.matches);
+
+    const handleChange = (e: MediaQueryListEvent) => {
+      setIsLargeScreen(e.matches);
+    };
+
+    mediaQuery.addEventListener("change", handleChange);
+
+    return () => {
+      mediaQuery.removeEventListener("change", handleChange);
+    };
+  }, []);
+
+  const isLogoCentered = isScrollingDown && isLargeScreen;
+
   return (
     <>
       <main>
-        <nav className="absolute top-5 left-0 w-full z-50 px-6">
-          <div className="max-w-7xl mx-auto grid grid-cols-3 items-center">
-            {/* LEFT — Logo + Brand */}
-            <div className="flex items-center gap-4 justify-self-start">
+        <nav className="fixed top-5 left-0 w-full z-50 px-6">
+          <div className="max-w-7xl mx-auto relative h-16">
+            {/* LEFT/CENTER — Logo + Brand (animates between left and true center) */}
+            <motion.div
+              initial={false}
+              animate={{
+                left: isLogoCentered ? "50%" : "0px",
+                x: isLogoCentered ? "-50%" : "0px",
+                y: "-50%",
+              }}
+              transition={{
+                duration: 0.35,
+                ease: [0.76, 0, 0.24, 1],
+              }}
+              className={`absolute top-1/2 flex items-center gap-4 transition-all duration-300 ${
+                isLogoCentered
+                  ? "bg-white rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] px-5 py-2"
+                  : "bg-transparent px-0 py-0"
+              }`}
+            >
               <img
                 src="/tfp_logo.png"
                 alt="TFP Coding Classes"
-                className="w-11 h-11 object-contain"
+                className="w-15 h-15 object-contain"
               />
 
               {/* Stylish Divider */}
               <div className="h-7 w-px bg-white/25" />
 
-              <span className="text-white font-raleway font-semibold tracking-wide leading-tight">
+              <span
+                className={`font-walter font-semibold tracking-wide leading-tight ${
+                  isLogoCentered ? "text-primary" : "text-white"
+                }`}
+              >
                 TFP Coding
                 <br />
                 Classes
               </span>
-            </div>
-            {/* CENTER — Glass Navigation */}
-            <div
+            </motion.div>
+
+            {/* CENTER — Glass Navigation, centered relative to the viewport/container, not grid columns */}
+            <motion.div
+              initial={false}
+              animate={{
+                opacity: isScrollingDown ? 0 : 1,
+                x: "-50%",
+                y: isScrollingDown ? -15 : 0,
+              }}
+              transition={{
+                duration: 0.35,
+                ease: [0.76, 0, 0.24, 1],
+              }}
               className="
-    hidden md:flex
-    items-center justify-self-center
+    hidden lg:flex
+    absolute inset-y-0 left-1/2
+    items-center
     gap-2
     px-3 py-2
-
     rounded-xl
-
     bg-white/[0.025]
     backdrop-blur-xl
-
     border border-white/[0.06]
-
     shadow-[0_8px_35px_rgba(0,0,0,0.15)]
-
-    relative
     overflow-hidden
-
-    before:absolute
-    before:inset-y-0
-    before:left-0
-    before:w-20
-    before:bg-gradient-to-r
-    before:from-white/[0.10]
-    before:to-transparent
-    before:pointer-events-none
-
-    after:absolute
-    after:inset-y-0
-    after:right-0
-    after:w-20
-    after:bg-gradient-to-l
-    after:from-white/[0.10]
-    after:to-transparent
-    after:pointer-events-none
   "
             >
+              {/* Home */}
               <a
                 href="#"
-                className="px-4 py-2 rounded-full text-white/80 hover:text-white hover:bg-white/[0.08] transition-all duration-300"
+                className="px-4 py-2 rounded-full text-white/80 transition-all duration-300 group"
               >
-                Home
+                <span className="relative block h-[1.4em] overflow-hidden">
+                  <span
+                    className="
+          block
+          transition-transform
+          duration-500
+          ease-[cubic-bezier(0.76,0,0.24,1)]
+          group-hover:-translate-y-full
+        "
+                  >
+                    Home
+                  </span>
+
+                  <span
+                    className="
+          absolute
+          left-0
+          top-full
+          block
+          transition-transform
+          duration-500
+          ease-[cubic-bezier(0.76,0,0.24,1)]
+          group-hover:-translate-y-full
+        "
+                  >
+                    Home
+                  </span>
+                </span>
               </a>
 
+              {/* About */}
               <a
                 href="#"
-                className="px-4 py-2 rounded-full text-white/80 hover:text-white hover:bg-white/[0.08] transition-all duration-300"
+                className="px-4 py-2 rounded-full text-white/80 transition-all duration-300 group"
               >
-                About
+                <span className="relative block h-[1.4em] overflow-hidden">
+                  <span
+                    className="
+          block
+          transition-transform
+          duration-500
+          ease-[cubic-bezier(0.76,0,0.24,1)]
+          group-hover:-translate-y-full
+        "
+                  >
+                    About
+                  </span>
+
+                  <span
+                    className="
+          absolute
+          left-0
+          top-full
+          block
+          transition-transform
+          duration-500
+          ease-[cubic-bezier(0.76,0,0.24,1)]
+          group-hover:-translate-y-full
+        "
+                  >
+                    About
+                  </span>
+                </span>
               </a>
 
+              {/* Courses */}
               <a
                 href="#"
-                className="px-4 py-2 rounded-full text-white/80 hover:text-white hover:bg-white/[0.08] transition-all duration-300"
+                className="px-4 py-2 rounded-full text-white/80 transition-all duration-300 group"
               >
-                Courses
+                <span className="relative block h-[1.4em] overflow-hidden">
+                  <span
+                    className="
+          block
+          transition-transform
+          duration-500
+          ease-[cubic-bezier(0.76,0,0.24,1)]
+          group-hover:-translate-y-full
+        "
+                  >
+                    Courses
+                  </span>
+
+                  <span
+                    className="
+          absolute
+          left-0
+          top-full
+          block
+          transition-transform
+          duration-500
+          ease-[cubic-bezier(0.76,0,0.24,1)]
+          group-hover:-translate-y-full
+        "
+                  >
+                    Courses
+                  </span>
+                </span>
               </a>
 
+              {/* Mentors */}
               <a
                 href="#"
-                className="px-4 py-2 rounded-full text-white/80 hover:text-white hover:bg-white/[0.08] transition-all duration-300"
+                className="px-4 py-2 rounded-full text-white/80 transition-all duration-300 group"
               >
-                Mentors
+                <span className="relative block h-[1.4em] overflow-hidden">
+                  <span
+                    className="
+          block
+          transition-transform
+          duration-500
+          ease-[cubic-bezier(0.76,0,0.24,1)]
+          group-hover:-translate-y-full
+        "
+                  >
+                    Mentors
+                  </span>
+
+                  <span
+                    className="
+          absolute
+          left-0
+          top-full
+          block
+          transition-transform
+          duration-500
+          ease-[cubic-bezier(0.76,0,0.24,1)]
+          group-hover:-translate-y-full
+        "
+                  >
+                    Mentors
+                  </span>
+                </span>
               </a>
 
+              {/* Contact */}
               <a
                 href="#"
-                className="px-4 py-2 rounded-full text-white/80 hover:text-white hover:bg-white/[0.08] transition-all duration-300"
+                className="px-4 py-2 rounded-full text-white/80 transition-all duration-300 group"
               >
-                Contact
-              </a>
-            </div>
+                <span className="relative block h-[1.4em] overflow-hidden">
+                  <span
+                    className="
+          block
+          transition-transform
+          duration-500
+          ease-[cubic-bezier(0.76,0,0.24,1)]
+          group-hover:-translate-y-full
+        "
+                  >
+                    Contact
+                  </span>
 
-            {/* RIGHT — Sign In */}
+                  <span
+                    className="
+          absolute
+          left-0
+          top-full
+          block
+          transition-transform
+          duration-500
+          ease-[cubic-bezier(0.76,0,0.24,1)]
+          group-hover:-translate-y-full
+        "
+                  >
+                    Contact
+                  </span>
+                </span>
+              </a>
+            </motion.div>
+
+            {/* RIGHT — Sign In, always pinned to the right edge */}
+            <motion.div
+              initial={false}
+              animate={{
+                opacity: isScrollingDown ? 0 : 1,
+                y: isScrollingDown ? -15 : 0,
+              }}
+              transition={{
+                duration: 0.35,
+                ease: [0.76, 0, 0.24, 1],
+              }}
+              className="hidden lg:flex absolute inset-y-0 right-0 items-center gap-4"
+            >
+              {" "}
+              {/* Request Call */}
+              <button
+                className="
+              flex items-center gap-1.5
+              px-4 py-1.5
+              text-sm
+              text-white
+              rounded-full
+              border border-secondary/30
+              bg-transparent
+              shadow-[inset_0_0_12px_rgba(46,176,168,0.18)]
+              transition-all duration-300
+              hover:border-secondary/60
+              hover:shadow-[inset_0_0_18px_rgba(46,176,168,0.30)]
+            "
+              >
+                <Phone size={14} strokeWidth={1.8} />
+                Request Call
+              </button>
+              {/* Sign In */}
+              <button
+                className="
+      text-sm
+      text-white/75
+      transition-all duration-300
+      hover:text-secondary
+    "
+              >
+                Sign In
+              </button>
+            </motion.div>
             <button
               className="
-        justify-self-end
-        px-5 py-2
-        rounded-full
-        border border-secondary/50
-        text-secondary
-        hover:bg-secondary
-        hover:text-primary
-        transition-all duration-300
-      "
+    lg:hidden
+    fixed
+    top-5
+    right-5
+    z-50
+    text-white
+    p-2
+  "
             >
-              Sign In
+              <TextAlignEnd size={24} strokeWidth={1.5} />
             </button>
           </div>
         </nav>
@@ -268,7 +504,7 @@ export default function Home() {
     sm:text-xl
     md:text-2xl
     text-center
-    font-syne
+    font-walter
     leading-relaxed
     mt-6
     sm:mt-8

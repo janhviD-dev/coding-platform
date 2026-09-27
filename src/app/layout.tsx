@@ -10,12 +10,24 @@ import {
   Raleway,
   Tenor_Sans,
   Syne,
+  Flamenco,
+  
 } from "next/font/google";
+
+import { Weight } from "lucide-react";
 
 const sora = Sora({
   variable: "--font-sora",
   subsets: ["latin"],
 });
+
+
+const flamenco = Flamenco({
+  variable: "--font-flamenco",
+  subsets: ["latin"],
+  weight: "400",
+});
+
 const indieFlower = Indie_Flower({
   variable: "--font-indie-flower",
   subsets: ["latin"],
@@ -88,6 +100,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     ${tenorSans.variable}
     ${syne.variable}
     ${indieFlower.variable}
+    ${flamenco.variable}
+    
+
     h-full
     antialiased
   `}

@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Walter+Turncoat&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -8,12 +9,16 @@
   --foreground: #ffffff;
 }
 
+
 @theme inline {
   --color-primary: var(--primary);
   --color-secondary: var(--secondary);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-flamenco: var(--flamenco);
 
+
+  --font-walter: "Walter Turncoat", cursive;
   --font-sans: var(--font-sora);
 
   --font-italiana: var(--font-italiana);
