@@ -76,7 +76,7 @@ export default function Home() {
               }}
               className={`absolute top-1/2 flex items-center gap-4 transition-all duration-300 ${
                 isLogoCentered
-                  ? "bg-white rounded-full shadow-[0_8px_30px_rgba(0,0,0,0.12)] px-5 py-2"
+                  ? "bg-white rounded-full shadow-[0_8px_30px_rgba(0,0,0,0.12)] px-2 py-2"
                   : "bg-transparent px-0 py-0"
               }`}
             >
@@ -88,13 +88,16 @@ export default function Home() {
 
               {/* Stylish Divider */}
               <div
-                className={`h-7 w-px ${
-                  isLogoCentered ? "bg-black/40" : "bg-white/25"
+                className={`h-7 w-px transition-all duration-500 ${
+                  isLogoCentered
+                    ? "w-0 opacity-0"
+                    : "w-px bg-white/25 opacity-100"
                 }`}
               />
+
               <span
-                className={`font-raleway font-bold tracking-wide leading-tight ${
-                  isLogoCentered ? "text-primary" : "text-white"
+                className={`font-raleway font-bold tracking-wide leading-tight transition-all duration-300 ${
+                  isLogoCentered ? "hidden" : "text-white"
                 }`}
               >
                 TFP Coding
@@ -803,13 +806,15 @@ export default function Home() {
             {/* BIG OUTER CONTAINER */}
             <div
               className="
-      relative mx-auto max-w-5xl
-      rounded-3xl
-      
-      bg-white/[0.02]
-      p-2 sm:p-3
-      overflow-hidden
-    "
+    relative mx-auto max-w-5xl
+    rounded-3xl
+    border border-white/20
+    bg-white/10
+    backdrop-blur-xl
+    shadow-[0_8px_40px_rgba(0,0,0,0.25)]
+    p-2 sm:p-3
+    overflow-hidden
+  "
             >
               <div className="grid grid-cols-1 gap-4 md:grid-cols-[1.1fr_0.9fr] md:gap-6">
                 {/* ================= TFP ================= */}
@@ -829,9 +834,7 @@ export default function Home() {
                       className="w-15 h-15 object-contain"
                     />
 
-                    {/* Divider */}
-                    <div className="h-10 w-px bg-white/30" />
-
+                    <div className="h-10 w-px bg-black/50" />
                     <h3
                       className="
       font-libre
@@ -919,7 +922,7 @@ export default function Home() {
 
                 {/* ================= OTHERS ================= */}
                 <div className="flex flex-col justify-center px-3 sm:px-4 md:px-5">
-                  <h3 className="font-libre text-lg sm:text-xl md:text-2xl text-white/40">
+                  <h3 className="font-libre text-lg sm:text-xl md:text-2xl text-white/60">
                     Others
                   </h3>
 
@@ -933,7 +936,7 @@ export default function Home() {
         "
                         strokeWidth={2.5}
                       />
-                      <p className="font-flamenco text-sm sm:text-base text-white/40">
+                      <p className="font-flamenco text-sm sm:text-base text-white/60">
                         High Fees With Compromised Quality
                       </p>
                     </div>
@@ -947,7 +950,7 @@ export default function Home() {
         "
                         strokeWidth={2.5}
                       />
-                      <p className="font-flamenco text-sm sm:text-base text-white/40">
+                      <p className="font-flamenco text-sm sm:text-base text-white/60">
                         Theory-Centric Learning
                       </p>
                     </div>
@@ -961,7 +964,7 @@ export default function Home() {
         "
                         strokeWidth={2.5}
                       />
-                      <p className="font-flamenco text-sm sm:text-base text-white/40">
+                      <p className="font-flamenco text-sm sm:text-base text-white/60">
                         Outdated, Static Curriculum
                       </p>
                     </div>
@@ -975,7 +978,7 @@ export default function Home() {
         "
                         strokeWidth={2.5}
                       />
-                      <p className="font-flamenco text-sm sm:text-base text-white/40">
+                      <p className="font-flamenco text-sm sm:text-base text-white/60">
                         No Competitive Learning Environment
                       </p>
                     </div>
@@ -988,7 +991,7 @@ export default function Home() {
         "
                         strokeWidth={2.5}
                       />
-                      <p className="font-flamencoy text-sm sm:text-base text-white/40">
+                      <p className="font-flamencoy text-sm sm:text-base text-white/60">
                         Limited Practical Exposure
                       </p>
                     </div>
@@ -997,6 +1000,98 @@ export default function Home() {
               </div>
             </div>
           </section>
+        </div>
+
+        {/* Section Divider */}
+        <div className="relative flex items-center justify-center w-full py-12 sm:py-16">
+          {/* Left Gradient Line */}
+          <div
+            className="
+      h-px
+      w-[25%]
+      sm:w-[30%]
+      bg-gradient-to-r
+      from-transparent
+      via-secondary/20
+      to-secondary/60
+    "
+          />
+
+          {/* Center Tech Element */}
+          <div className="relative mx-4 flex items-center justify-center">
+            <div className="absolute h-8 w-8 rounded-full bg-secondary/10 blur-xl" />
+
+            <div
+              className="
+        relative
+        h-2
+        w-2
+        rounded-full
+        bg-secondary
+        shadow-[0_0_12px_rgba(46,176,168,0.8)]
+      "
+            />
+          </div>
+
+          {/* Right Gradient Line */}
+          <div
+            className="
+      h-px
+      w-[25%]
+      sm:w-[30%]
+      bg-gradient-to-l
+      from-transparent
+      via-secondary/20
+      to-secondary/60
+    "
+          />
+        </div>
+        <div className="flex flex-col items-center justify-center">
+          <div className="relative inline-flex items-center justify-center px-8 py-3">
+            <svg
+              className="absolute inset-0 w-full h-full pointer-events-none overflow-visible"
+              viewBox="0 0 100 40"
+              preserveAspectRatio="none"
+              fill="none"
+            >
+              <rect
+                x="1"
+                y="1"
+                width="98"
+                height="38"
+                rx="1"
+                fill="#2eb0a8"
+                fillOpacity="0.25"
+              />
+
+              <motion.rect
+                x="1"
+                y="1"
+                width="98"
+                height="38"
+                rx="1"
+                stroke="#2eb0a8"
+                strokeWidth="0.7"
+                opacity="0.7"
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={{ pathLength: 1, opacity: 0.7 }}
+                transition={{
+                  duration: 1.2,
+                  delay: 0.8,
+                  ease: "easeInOut",
+                }}
+              />
+
+              <circle cx="1" cy="1" r="1.3" fill="#2eb0a8" />
+              <circle cx="99" cy="1" r="1.3" fill="#2eb0a8" />
+              <circle cx="1" cy="39" r="1.3" fill="#2eb0a8" />
+              <circle cx="99" cy="39" r="1.3" fill="#2eb0a8" />
+            </svg>
+
+            <h2 className="relative z-10 text-center font-raleway text-white">
+              COURCES
+            </h2>
+          </div>
         </div>
       </main>
     </>
