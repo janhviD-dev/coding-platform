@@ -310,7 +310,6 @@ import { motion } from "framer-motion";
 //         </div>
 //       </section>
 
-
 //       {/* =========================================================
 //           02. WHY WE EXIST SECTION
 //       ========================================================= */}
@@ -348,7 +347,6 @@ import { motion } from "framer-motion";
 
 //         </div>
 
-
 //         {/* Background Grid */}
 //         <div
 //           className="
@@ -360,7 +358,6 @@ import { motion } from "framer-motion";
 //             bg-[size:70px_70px]
 //           "
 //         />
-
 
 //         <div className="relative z-10 max-w-6xl mx-auto">
 
@@ -413,7 +410,6 @@ import { motion } from "framer-motion";
 //             </p>
 
 //           </motion.div>
-
 
 //           {/* Main Content */}
 //           <div
@@ -515,7 +511,6 @@ import { motion } from "framer-motion";
 
 //             </motion.div>
 
-
 //             {/* Right Side Cards */}
 //             <div className="grid sm:grid-cols-2 gap-5">
 
@@ -588,7 +583,6 @@ import { motion } from "framer-motion";
 
 //               </motion.div>
 
-
 //               {/* Card 02 */}
 //               <motion.div
 //                 className="
@@ -658,7 +652,6 @@ import { motion } from "framer-motion";
 
 //               </motion.div>
 
-
 //               {/* Card 03 */}
 //               <motion.div
 //                 className="
@@ -727,7 +720,6 @@ import { motion } from "framer-motion";
 //                 </p>
 
 //               </motion.div>
-
 
 //               {/* Card 04 */}
 //               <motion.div
@@ -807,10 +799,6 @@ import { motion } from "framer-motion";
 //   );
 // }
 
-
-
-
-
 const WhyWeExist = () => {
   return (
     /* =========================================================
@@ -831,7 +819,6 @@ const WhyWeExist = () => {
     >
       {/* Background Glow */}
       <div className="absolute inset-0 pointer-events-none">
-
         <div
           className="
             absolute
@@ -857,11 +844,9 @@ const WhyWeExist = () => {
             blur-[140px]
           "
         />
-
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto">
-
         {/* Small Section Label */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -871,7 +856,6 @@ const WhyWeExist = () => {
           className="mb-10"
         >
           <div className="flex items-center gap-4">
-
             <span
               className="
                 w-10
@@ -892,7 +876,6 @@ const WhyWeExist = () => {
             >
               Why We Exist
             </span>
-
           </div>
         </motion.div>
 
@@ -918,23 +901,13 @@ const WhyWeExist = () => {
           "
         >
           Because learning
-          <span className="text-secondary">
-            {" "}to code
-          </span>
-
+          <span className="text-secondary"> to code</span>
           <br />
-
           should open
-          <span className="text-secondary">
-            {" "}possibilities.
-          </span>
-
+          <span className="text-secondary"> possibilities.</span>
           <br />
-
           Not create
-          <span className="text-white/35">
-            {" "}limitations.
-          </span>
+          <span className="text-white/35"> limitations.</span>
         </motion.h2>
 
         {/* Bottom Content */}
@@ -949,7 +922,6 @@ const WhyWeExist = () => {
             items-start
           "
         >
-
           {/* Left Side Number */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -958,7 +930,6 @@ const WhyWeExist = () => {
             transition={{ duration: 0.7 }}
             className="hidden lg:block"
           >
-
             <div
               className="
                 text-[120px]
@@ -974,7 +945,6 @@ const WhyWeExist = () => {
             </div>
 
             <div className="mt-[-25px] ml-2">
-
               <span
                 className="
                   text-secondary
@@ -984,9 +954,7 @@ const WhyWeExist = () => {
               >
                 The purpose
               </span>
-
             </div>
-
           </motion.div>
 
           {/* Right Side Content */}
@@ -996,7 +964,6 @@ const WhyWeExist = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-
             <p
               className="
                 text-lg
@@ -1007,11 +974,12 @@ const WhyWeExist = () => {
                 leading-relaxed
               "
             >
-              Learning to code should not feel like memorizing
-              endless syntax or simply watching tutorials.
+              Learning to code should not feel like memorizing endless syntax or
+              simply watching tutorials.
               <span className="text-white">
-                {" "}It should give students the confidence to
-                create, experiment and solve real problems.
+                {" "}
+                It should give students the confidence to create, experiment and
+                solve real problems.
               </span>
             </p>
 
@@ -1026,10 +994,9 @@ const WhyWeExist = () => {
                 max-w-3xl
               "
             >
-              We created TFP Coding Classes to bridge the gap
-              between learning concepts and actually using them.
-              Our goal is to make technology practical, engaging
-              and accessible — so students can move from
+              We created TFP Coding Classes to bridge the gap between learning
+              concepts and actually using them. Our goal is to make technology
+              practical, engaging and accessible — so students can move from
               understanding an idea to building something with it.
             </p>
 
@@ -1044,7 +1011,6 @@ const WhyWeExist = () => {
                 border-secondary
               "
             >
-
               <p
                 className="
                   text-xl
@@ -1057,30 +1023,22 @@ const WhyWeExist = () => {
                 "
               >
                 “We don't just want students to
-                <span className="text-secondary">
-                  {" "}learn technology.
-                </span>
-
+                <span className="text-secondary"> learn technology.</span>
                 <br className="hidden sm:block" />
-
                 We want them to
-                <span className="text-secondary">
-                  {" "}use it with confidence.
-                </span>”
+                <span className="text-secondary"> use it with confidence.</span>
+                ”
               </p>
-
             </div>
 
             {/* Small Bottom Tags */}
             <div className="mt-10 flex flex-wrap gap-3">
-
               {[
                 "Learn With Purpose",
                 "Build With Confidence",
                 "Solve Real Problems",
                 "Grow Continuously",
               ].map((item, index) => (
-
                 <motion.span
                   key={item}
                   initial={{
@@ -1116,13 +1074,9 @@ const WhyWeExist = () => {
                 >
                   {item}
                 </motion.span>
-
               ))}
-
             </div>
-
           </motion.div>
-
         </div>
 
         {/* Bottom Divider */}
@@ -1152,11 +1106,9 @@ const WhyWeExist = () => {
             to-transparent
           "
         />
-
       </div>
     </section>
   );
 };
 
 export default WhyWeExist;
-

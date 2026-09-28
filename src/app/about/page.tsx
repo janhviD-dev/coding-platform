@@ -1,10 +1,10 @@
-// import AboutHero from "../components/About/AboutHero";
-import WhyWeExist from "../components/About/WhyWeExist";
+import AboutHero from "@/components/about/AboutHero";
+import WhyWeExist from "@/components/about/WhyWeExist";
 export default function page(){
     return (
       <>
         <div>
-           {/* <AboutHero/> */}
+           <AboutHero/>
            <WhyWeExist/>
         </div>
       </>
