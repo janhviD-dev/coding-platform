@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Dancing+Script:wght@400..700&family=Unbounded:wght@200..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Walter+Turncoat&display=swap');
 @import "tailwindcss";
 
@@ -20,6 +21,7 @@
 
   --font-walter: "Walter Turncoat", cursive;
   --font-sans: var(--font-sora);
+  --font-unbounded: "Unbounded", sans-serif;
 
   --font-italiana: var(--font-italiana);
   --font-prata: var(--font-prata);
