@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Navbar from "@/components/Navbar";
 import { Sora } from "next/font/google";import "./globals.css";
 import {
   Italiana,
@@ -14,7 +15,6 @@ import {
   
 } from "next/font/google";
 
-import { Weight } from "lucide-react";
 
 const sora = Sora({
   variable: "--font-sora",
@@ -107,7 +107,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     antialiased
   `}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <Navbar />
+        {children}
+      </body>
     </html>
   );
 }
