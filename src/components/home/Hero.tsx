@@ -2,10 +2,12 @@
 
 import { motion } from "framer-motion";
 import HeroBackground from "../animation/Herobeckground";
+import CustomCursor from "../animation/CustomCursor";
 
 export default function Hero(){
     return (
       <section className="relative min-h-screen overflow-hidden flex items-center justify-center px-5 sm:px-6 mt-20">
+        <CustomCursor/>
         <HeroBackground />
         {/* Animated background glow */}
         {/* Abstract Line Background */}

@@ -1,7 +1,7 @@
 "use client";
 import Hero from "@/components/home/Hero";
 import WhyChooseUs from "@/components/home/WhyChooseUs";
-import Courses from "@/components/home/Courses";
+import Courses from "@/components/courses/CourseStack";
 
 
 export default function Home() {
