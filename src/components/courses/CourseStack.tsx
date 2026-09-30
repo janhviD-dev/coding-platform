@@ -153,7 +153,7 @@ export default function CourseStack() {
             <circle cx="99" cy="39" r="1.3" fill="#2eb0a8" />
           </svg>
 
-          <h2 className="relative z-40  text-center font-raleway text-white">
+          <h2 className="relative z-40 text-2xl text-center font-raleway text-white">
             Course
           </h2>
         </div>

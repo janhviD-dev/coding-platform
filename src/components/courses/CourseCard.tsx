@@ -9,12 +9,12 @@ const THEME: Record<
   light: {
     card: "bg-white text-neutral-900",
     muted: "text-neutral-500",
-    price: "text-[#d9502a]",
-    cta: "bg-[#d9502a] text-white hover:bg-[#bf431f]",
+    price: "text-black",
+    cta: "bg-[#090843] text-white hover:bg-[#bf431f]",
     media: "bg-[radial-gradient(circle_at_30%_30%,#2f6b4a,#0c1a13)]",
   },
   orange: {
-    card: "bg-[#090843] text-white",
+    card: "bg-[#2eb0a8] text-white",
     muted: "text-white/70",
     price: "text-white",
     cta: "bg-white text-neutral-900 hover:bg-neutral-100",
@@ -22,10 +22,10 @@ const THEME: Record<
       "bg-[radial-gradient(circle_at_60%_30%,rgba(255,255,255,.25),#141414)]",
   },
   dark: {
-    card: "bg-black text-white",
-    muted: "text-white/60",
-    price: "text-[#d9502a]",
-    cta: "bg-white text-neutral-900 hover:bg-neutral-100",
+    card: "bg-white text-black",
+    muted: "text-black/60",
+    price: "text-Black",
+    cta: "bg-[#090843] text-white ",
     media: "bg-[radial-gradient(circle_at_40%_30%,#555,#0a0a0a)]",
   },
 };

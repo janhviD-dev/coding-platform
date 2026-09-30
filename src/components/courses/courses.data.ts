@@ -30,7 +30,7 @@ export const courses: Course[] = [
     id: "web-3",
     variant: "light",
     title:
-      "3.0 Job Ready AI Powered Cohort: Complete Web Development + DSA + Gen-AI",
+      "Complete Web Development + DSA + Gen-AI",
     description:
       "Build real scalable products used by thousands of users, learn AI engineering, full stack development and DevOps.",
     stats: stats("7", "Months"),
@@ -55,7 +55,7 @@ export const courses: Course[] = [
     id: "web-2",
     variant: "dark",
     title:
-      "2.0 Job Ready AI Powered Cohort: Complete Web Development + DSA + Gen-AI",
+      "Complete Web Development + DSA",
     description:
       "Master the fundamentals with live classes, real projects and placement guidance.",
     stats: stats("200+", "Hours"),
@@ -67,7 +67,7 @@ export const courses: Course[] = [
   {
     id: "bootcamp",
     variant: "orange",
-    title: "Full Stack Bootcamp: From Zero To First Developer Job",
+    title: "Full Stack: From Zero To First Developer Job",
     description:
       "A guided path with weekly reviews, portfolio projects and interview preparation.",
     stats: stats("4", "Months"),

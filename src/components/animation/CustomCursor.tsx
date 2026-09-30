@@ -3,156 +3,269 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 
+const BASE_SIZE = 40;
+const HOVER_SIZE = 54;
+const PRESS_SCALE = 0.85;
+const FOLLOW = 0.18;
+
+const INTERACTIVE_SELECTOR =
+  "a, button, [data-cursor], input, textarea, select";
+
 export default function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const cursor = cursorRef.current;
+    const inner = innerRef.current;
 
-    if (!cursor) return;
+    if (!cursor || !inner) return;
 
-    // Disable on touch devices
-    if (window.matchMedia("(pointer: coarse)").matches) return;
+    const mm = gsap.matchMedia();
 
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
+    mm.add("(hover: hover) and (pointer: fine)", () => {
+      let active = false;
+      let hovering = false;
+      let pressed = false;
 
-    let currentX = mouseX;
-    let currentY = mouseY;
+      let clientX = 0;
+      let clientY = 0;
 
-    let previousX = mouseX;
-    let previousY = mouseY;
+      const pos = {
+        x: 0,
+        y: 0,
+      };
 
-    let rafId: number;
-
-    const move = (e: MouseEvent) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    };
-
-    const animate = () => {
-      currentX += (mouseX - currentX) * 0.2;
-      currentY += (mouseY - currentY) * 0.2;
-
-      const velocityX = mouseX - previousX;
-      const velocityY = mouseY - previousY;
-
-      const speed = Math.sqrt(
-        velocityX * velocityX + velocityY * velocityY
-      );
-
-      const angle =
-        Math.atan2(velocityY, velocityX) * (180 / Math.PI);
-
-      const stretch = Math.min(1 + speed * 0.012, 1.3);
+      let angle = 0;
+      let stretch = 0;
 
       gsap.set(cursor, {
-        x: currentX,
-        y: currentY,
-        rotation: angle * 0.25,
-        scaleX: stretch,
-        scaleY: 1 / Math.sqrt(stretch),
+        opacity: 0,
+        x: 0,
+        y: 0,
       });
 
-      previousX += (mouseX - previousX) * 0.15;
-      previousY += (mouseY - previousY) * 0.15;
-
-      rafId = requestAnimationFrame(animate);
-    };
-
-    const enter = () => {
-      gsap.to(cursor, {
-        width: 54,
-        height: 54,
-        borderRadius: 15,
-        opacity: 0.9,
-        duration: 0.35,
-        ease: "power3.out",
-      });
-    };
-
-    const leave = () => {
-      gsap.to(cursor, {
-        width: 40,
-        height: 40,
-        borderRadius: 11,
-        opacity: 0.6,
-        duration: 0.4,
-        ease: "power3.out",
-      });
-    };
-
-    const down = () => {
-      gsap.to(cursor, {
-        scale: 0.78,
-        duration: 0.12,
-        ease: "power2.out",
-      });
-    };
-
-    const up = () => {
-      gsap.to(cursor, {
+      gsap.set(inner, {
+        width: BASE_SIZE,
+        height: BASE_SIZE,
         scale: 1,
-        duration: 0.35,
-        ease: "back.out(2)",
       });
-    };
 
-    const interactiveElements = document.querySelectorAll(
-      "a, button, [data-cursor]"
-    );
+      const tick = () => {
+        const targetX = clientX;
+        const targetY = clientY;
 
-    interactiveElements.forEach((element) => {
-      element.addEventListener("mouseenter", enter);
-      element.addEventListener("mouseleave", leave);
+        const k = 1 - Math.pow(1 - FOLLOW, gsap.ticker.deltaRatio());
+
+        const prevX = pos.x;
+        const prevY = pos.y;
+
+        pos.x += (targetX - pos.x) * k;
+        pos.y += (targetY - pos.y) * k;
+
+        const vx = pos.x - prevX;
+        const vy = pos.y - prevY;
+
+        const speed = Math.hypot(vx, vy);
+
+        const targetStretch = Math.min(speed * 0.012, 0.3);
+
+        stretch += (targetStretch - stretch) * 0.2;
+
+        if (speed > 1) {
+          const targetAngle = (Math.atan2(vy, vx) * 180) / Math.PI;
+
+          const diff = ((targetAngle - angle + 540) % 360) - 180;
+
+          angle += diff * 0.15;
+        }
+
+        gsap.set(cursor, {
+          x: pos.x,
+          y: pos.y,
+          rotation: angle,
+          scaleX: 1 + stretch,
+          scaleY: 1 - stretch * 0.4,
+        });
+      };
+
+      const updateSize = () => {
+        const size = hovering ? HOVER_SIZE : BASE_SIZE;
+
+        gsap.to(inner, {
+          width: size,
+          height: size,
+          duration: 0.3,
+          ease: "power3.out",
+          overwrite: "auto",
+        });
+      };
+
+      const updatePress = () => {
+        gsap.to(inner, {
+          scale: pressed ? PRESS_SCALE : 1,
+          duration: 0.2,
+          ease: "power2.out",
+          overwrite: "auto",
+        });
+      };
+
+      const show = (e: MouseEvent) => {
+        clientX = e.clientX;
+        clientY = e.clientY;
+
+        pos.x = clientX;
+        pos.y = clientY;
+
+        active = true;
+
+        gsap.ticker.remove(tick);
+        gsap.ticker.add(tick);
+
+        gsap.killTweensOf(cursor, "opacity");
+
+        gsap.to(cursor, {
+          opacity: 1,
+          duration: 0.2,
+          ease: "power2.out",
+        });
+      };
+
+      const hide = () => {
+        active = false;
+        hovering = false;
+        pressed = false;
+
+        updateSize();
+        updatePress();
+
+        gsap.killTweensOf(cursor, "opacity");
+
+        gsap.to(cursor, {
+          opacity: 0,
+          duration: 0.2,
+          ease: "power2.out",
+          onComplete: () => {
+            if (!active) {
+              gsap.ticker.remove(tick);
+            }
+          },
+        });
+      };
+
+      const onMouseMove = (e: MouseEvent) => {
+        if (!active) {
+          show(e);
+          return;
+        }
+
+        clientX = e.clientX;
+        clientY = e.clientY;
+      };
+
+      const onMouseOver = (e: MouseEvent) => {
+        const target = e.target as Element | null;
+
+        if (!target) return;
+
+        const interactive = target.closest(INTERACTIVE_SELECTOR);
+
+        const nextHover = interactive !== null;
+
+        if (nextHover !== hovering) {
+          hovering = nextHover;
+          updateSize();
+        }
+      };
+
+      const onMouseDown = () => {
+        pressed = true;
+        updatePress();
+      };
+
+      const onMouseUp = () => {
+        pressed = false;
+        updatePress();
+      };
+
+      const onWindowBlur = () => {
+        hide();
+      };
+
+      window.addEventListener("mousemove", onMouseMove);
+
+      window.addEventListener("mouseover", onMouseOver);
+
+      window.addEventListener("mousedown", onMouseDown);
+
+      window.addEventListener("mouseup", onMouseUp);
+
+      window.addEventListener("blur", onWindowBlur);
+
+      gsap.ticker.add(tick);
+
+      return () => {
+        window.removeEventListener("mousemove", onMouseMove);
+
+        window.removeEventListener("mouseover", onMouseOver);
+
+        window.removeEventListener("mousedown", onMouseDown);
+
+        window.removeEventListener("mouseup", onMouseUp);
+
+        window.removeEventListener("blur", onWindowBlur);
+
+        gsap.ticker.remove(tick);
+
+        gsap.killTweensOf([cursor, inner]);
+      };
     });
 
-    window.addEventListener("mousemove", move);
-    window.addEventListener("mousedown", down);
-    window.addEventListener("mouseup", up);
-
-    animate();
-
     return () => {
-      cancelAnimationFrame(rafId);
-
-      window.removeEventListener("mousemove", move);
-      window.removeEventListener("mousedown", down);
-      window.removeEventListener("mouseup", up);
-
-      interactiveElements.forEach((element) => {
-        element.removeEventListener("mouseenter", enter);
-        element.removeEventListener("mouseleave", leave);
-      });
+      mm.revert();
     };
   }, []);
 
   return (
-    <div
-      ref={cursorRef}
-      className="
-        fixed
-        top-0
-        left-0
+    <>
+      <style>{`
+        html[data-custom-cursor="true"],
+        html[data-custom-cursor="true"] * {
+          cursor: none !important;
+        }
+      `}</style>
 
-        z-[99999]
-        pointer-events-none
-
-        w-[40px]
-        h-[40px]
-
-        rounded-[11px]
-
-        border
-        border-white
-
-        opacity-100
-
-        -translate-x-1/2
-        -translate-y-1/2
-
-        will-change-transform
-      "
-    />
+      <div
+        ref={cursorRef}
+        aria-hidden="true"
+        className="
+          pointer-events-none
+          fixed
+          left-0
+          top-0
+          z-[9999]
+          flex
+          h-0
+          w-0
+          items-center
+          justify-center
+          opacity-0
+        "
+      >
+        <div
+          ref={innerRef}
+          className="
+            shrink-0
+            rounded-xl
+            border-2
+            border-white
+          "
+          style={{
+            width: BASE_SIZE,
+            height: BASE_SIZE,
+          }}
+        />
+      </div>
+    </>
   );
 }

@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Phone, TextAlignEnd } from "lucide-react";
 import { useEffect, useState } from "react";
+import CustomCursor from "./animation/CustomCursor";
 
 export default function Navbar(){
      
@@ -55,6 +56,7 @@ export default function Navbar(){
   return (
 
       <main>
+        <CustomCursor/>
         <nav className="fixed top-5 left-0 w-full z-50 px-6">
           {/* Transparent positioning boundary: full width, fixed height, position:relative,
               no background/border/shadow. Logo is anchored left-0, hamburger right-0 (both
