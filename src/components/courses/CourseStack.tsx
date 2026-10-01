@@ -5,19 +5,35 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import CourseCard from "./CourseCard";
 import { courses } from "./courses.data";
-import { motion } from "framer-motion";
 
-if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+  // Mobile address bar hiding/showing fires resize -> prevents refresh jumps while scrolling.
+  ScrollTrigger.config({ ignoreMobileResize: true });
+}
 
 /* ---- TWEAK HERE ---------------------------------------------------- */
 const CONFIG = {
   scaleAmount: 0.05, // covered card ends at 1 - 0.05 = 0.95
   dimTo: 0.78, // covered card ends at 78% brightness
-  scrub: 0.6, // seconds of smoothing (higher = softer/slower catch-up)
-  // pin: distance from viewport top for card 0, and extra offset per card (px)
-  desktop: { pin: 96, gap: 28 },
-  tablet: { pin: 84, gap: 22 },
-  mobile: { pin: 76, gap: 16 },
+  scrub: 0.8, // smoothing in seconds (higher = softer / slower catch-up)
+
+  // TIMING: shrink + dim wait until the next card has covered this fraction
+  // of the current card. 0 = starts the moment cards touch, 0.3 = after 30% covered.
+  dimDelay: 0.3,
+
+  // After the last card lands, keep the stack pinned for this much scroll (in vh)
+  // so the final card can be read before the section scrolls away.
+  lastHoldVh: 0.35,
+
+  // Per-breakpoint: pin = distance from viewport top for card 0 (px),
+  // gap = extra offset per following card (px) = how much of earlier cards stays visible.
+  mobile: { pin: 72, gap: 14 },
+  tablet: { pin: 84, gap: 20 },
+  desktop: { pin: 96, gap: 26 },
+  wide: { pin: 112, gap: 32 },
+
+  safeBottom: 16, // px kept free below a pinned card on short screens
 };
 /* -------------------------------------------------------------------- */
 
@@ -33,62 +49,79 @@ export default function CourseStack() {
 
       mm.add(
         {
-          isDesktop: "(min-width: 1024px)",
+          isWide: "(min-width: 1536px)",
+          isDesktop: "(min-width: 1024px) and (max-width: 1535px)",
           isTablet: "(min-width: 640px) and (max-width: 1023px)",
           reduce: "(prefers-reduced-motion: reduce)",
         },
         (context) => {
-          const { isDesktop, isTablet, reduce } = context.conditions as {
-            isDesktop: boolean;
-            isTablet: boolean;
-            reduce: boolean;
-          };
-          const { pin, gap } = isDesktop
-            ? CONFIG.desktop
-            : isTablet
-              ? CONFIG.tablet
-              : CONFIG.mobile;
+          const { isWide, isDesktop, isTablet, reduce } =
+            context.conditions as {
+              isWide: boolean;
+              isDesktop: boolean;
+              isTablet: boolean;
+              reduce: boolean;
+            };
+          const { pin, gap } = isWide
+            ? CONFIG.wide
+            : isDesktop
+              ? CONFIG.desktop
+              : isTablet
+                ? CONFIG.tablet
+                : CONFIG.mobile;
 
           const items = gsap.utils.toArray<HTMLElement>(
             "[data-stack-item]",
             root,
           );
           const last = items.length - 1;
-          const offsetOf = (i: number) => pin + i * gap; // each card pins a bit lower -> visible stack
+
+          // Where card i sticks. If a card is taller than the screen (phones in landscape,
+          // small laptops) it is moved up so its BOTTOM stays visible and it can be read.
+          const pinTop = (i: number) =>
+            Math.min(
+              pin + i * gap,
+              window.innerHeight - items[i].offsetHeight - CONFIG.safeBottom,
+            );
+
+          // Shared end: last card arrives at its slot, then everything holds a bit longer.
+          const endPos = () =>
+            `top top+=${pinTop(last) - window.innerHeight * CONFIG.lastHoldVh}`;
 
           items.forEach((item, i) => {
-            if (i === last) return;
-
-            // 1) PIN: card i sticks at its own offset until the LAST card reaches its slot.
-            //    pinSpacing:false lets the next card slide over it instead of pushing it.
+            // 1) PIN. pinSpacing:false -> next card slides OVER this one instead of pushing it.
             ScrollTrigger.create({
               trigger: item,
-              start: `top top+=${offsetOf(i)}`,
+              start: () => `top top+=${pinTop(i)}`,
               endTrigger: items[last],
-              end: `top top+=${offsetOf(last)}`,
+              end: endPos,
               pin: true,
               pinSpacing: false,
               invalidateOnRefresh: true,
             });
 
-            // 2) DEPTH: as card i+1 travels from the viewport bottom to its pin slot,
-            //    card i scrubs to smaller + darker. Progress is tied to scroll, not time.
-            if (!reduce) {
-              const inner =
-                item.querySelector<HTMLElement>("[data-stack-inner]");
-              gsap.to(inner, {
-                scale: 1 - CONFIG.scaleAmount,
-                filter: `brightness(${CONFIG.dimTo})`,
-                ease: "none",
-                scrollTrigger: {
-                  trigger: items[i + 1],
-                  start: "top bottom",
-                  end: `top top+=${offsetOf(i + 1)}`,
-                  scrub: CONFIG.scrub,
-                  invalidateOnRefresh: true,
+            if (i === last || reduce) return;
+
+            // 2) DEPTH. Runs only while card i+1 is physically covering card i:
+            //    from (A) next card's top reaching card i's bottom edge (+ delay)
+            //    to   (B) next card settling in its own pin slot.
+            const inner = item.querySelector<HTMLElement>("[data-stack-inner]");
+            gsap.to(inner, {
+              scale: 1 - CONFIG.scaleAmount,
+              filter: `brightness(${CONFIG.dimTo})`,
+              ease: "none",
+              scrollTrigger: {
+                trigger: items[i + 1],
+                start: () => {
+                  const A = pinTop(i) + item.offsetHeight;
+                  const B = pinTop(i + 1);
+                  return `top top+=${A - (A - B) * CONFIG.dimDelay}`;
                 },
-              });
-            }
+                end: () => `top top+=${pinTop(i + 1)}`,
+                scrub: CONFIG.scrub,
+                invalidateOnRefresh: true,
+              },
+            });
           });
         },
       );
@@ -102,74 +135,30 @@ export default function CourseStack() {
 
     return () => {
       window.removeEventListener("load", refresh);
-      ctx.revert(); // kills every trigger/tween created above (safe for HMR + StrictMode)
+      ctx.revert(); // kills every trigger/tween (safe for HMR + StrictMode)
     };
   }, []);
 
   return (
     <section
       ref={rootRef}
-      className="overflow-x-clip bg-#090843 px-4 pb-24 pt-16 sm:px-6 md:pt-24"
+      className="overflow-x-clip bg-#090843 px-3 pb-[40svh] pt-14 sm:px-6 md:pt-24"
     >
-      <div className="-translate-y-2 flex w-full justify-center">
-        <div className="relative inline-flex items-center justify-center px-8 py-3">
-          <svg
-            className="pointer-events-none absolute inset-0 h-full w-full overflow-visible"
-            viewBox="0 0 100 40"
-            preserveAspectRatio="none"
-            fill="none"
-          >
-            <rect
-              x="1"
-              y="1"
-              width="98"
-              height="38"
-              rx="1"
-              fill="#2eb0a8"
-              fillOpacity="0.25"
-            />
-
-            <motion.rect
-              x="1"
-              y="1"
-              width="98"
-              height="38"
-              rx="1"
-              stroke="#2eb0a8"
-              strokeWidth="0.7"
-              opacity="0.7"
-              initial={{ pathLength: 0, opacity: 0 }}
-              animate={{ pathLength: 1, opacity: 0.7 }}
-              transition={{
-                duration: 1.2,
-                delay: 0.8,
-                ease: "easeInOut",
-              }}
-            />
-
-            <circle cx="1" cy="1" r="1.3" fill="#2eb0a8" />
-            <circle cx="99" cy="1" r="1.3" fill="#2eb0a8" />
-            <circle cx="1" cy="39" r="1.3" fill="#2eb0a8" />
-            <circle cx="99" cy="39" r="1.3" fill="#2eb0a8" />
-          </svg>
-
-          <h2 className="relative z-40 text-2xl text-center font-raleway text-white">
-            Course
-          </h2>
-        </div>
-      </div>
-      <div className="mx-auto max-w-5xl">
-        <h2 className=" text-white font-raleway mx-auto mb-10 max-w-2xl text-center text-2xl font-medium sm:text-3xl md:mb-16 md:text-4xl">
+      <div className="mx-auto w-full max-w-5xl">
+        <h2 className="mx-auto mb-10 max-w-2xl text-center text-[clamp(1.375rem,3.2vw+0.5rem,2.5rem)] font-medium leading-tight md:mb-16">
           Not Sure Which Course Fits You? Don&apos;t Worry, We&apos;re Here To
           Help.
         </h2>
 
-        {/* Bottom margin = scroll distance between cards (bigger = slower stacking) */}
+        {/*
+          READING TIME: bottom margin of each wrapper = how long a pinned card stays
+          untouched before the next card begins to cover it. Raise it for more time.
+        */}
         {courses.map((course, i) => (
           <div
             key={course.id}
             data-stack-item
-            className={i === courses.length - 1 ? "" : "mb-10 md:mb-20"}
+            className={i === courses.length - 1 ? "" : "mb-[max(7rem,34svh)]"}
           >
             <CourseCard course={course} />
           </div>

@@ -7,8 +7,8 @@ import CustomCursor from "../animation/CustomCursor";
 export default function Hero(){
     return (
       <section className="relative min-h-screen overflow-hidden flex items-center justify-center px-5 sm:px-6 mt-20">
-        <CustomCursor/>
-        
+        <CustomCursor />
+
         <HeroBackground />
         {/* Animated background glow */}
         {/* Abstract Line Background */}
@@ -146,8 +146,7 @@ export default function Hero(){
                 {/* Bottom-right dot */}
                 <circle cx="99" cy="39" r="1.3" fill="#2eb0a8" />
               </svg>
-
-              <span className="relative z-10">Companies</span>
+              <span className="relative z-10 font-medium">Companies</span>{" "}
             </span>{" "}
             Want To Hire!
           </p>

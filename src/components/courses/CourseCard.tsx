@@ -14,7 +14,7 @@ const THEME: Record<
     media: "bg-[radial-gradient(circle_at_30%_30%,#2f6b4a,#0c1a13)]",
   },
   orange: {
-    card: "bg-[#2eb0a8] text-white",
+    card: "bg-secondary text-white",
     muted: "text-white/70",
     price: "text-white",
     cta: "bg-white text-neutral-900 hover:bg-neutral-100",
@@ -24,8 +24,8 @@ const THEME: Record<
   dark: {
     card: "bg-white text-black",
     muted: "text-black/60",
-    price: "text-Black",
-    cta: "bg-[#090843] text-white ",
+    price: "text-[#090843]",
+    cta: "bg-primary text-white",
     media: "bg-[radial-gradient(circle_at_40%_30%,#555,#0a0a0a)]",
   },
 };
@@ -38,24 +38,22 @@ export default function CourseCard({ course }: { course: Course }) {
     <article
       data-stack-inner
       className={`grid origin-top items-center gap-5 rounded-2xl p-4 shadow-[0_-10px_30px_rgba(0,0,0,0.10)]
-        will-change-transform sm:gap-6 sm:p-6 md:grid-cols-[1fr_1.15fr] md:gap-10 md:rounded-3xl md:p-8 ${t.card}`}
+        will-change-transform sm:gap-6 sm:p-6 md:grid-cols-[1fr_1.15fr] md:gap-8 md:rounded-3xl md:p-8 lg:gap-10 ${t.card}`}
     >
       <div
-        className={`relative aspect-[16/10] w-full overflow-hidden rounded-xl ${t.media}`}
+        className={`relative aspect-[16/10] w-full max-h-[38svh] md:max-h-none overflow-hidden rounded-xl ${t.media}`}
       >
-        {course.image && (
-          <Image
-            src={course.image}
-            alt={course.title}
-            fill
-            sizes="(min-width: 768px) 45vw, 100vw"
-            className="object-cover"
-          />
-        )}
+        <Image
+          src="/Full Course Web Development Using AI.png"
+          alt="Full Course Web Development Using AI"
+          fill
+          sizes="(min-width: 768px) 45vw, 100vw"
+          className="object-cover"
+        />
       </div>
 
       <div className="min-w-0">
-        <h3 className="text-xl font-bold leading-tight sm:text-2xl lg:text-3xl">
+        <h3 className="text-[clamp(1.125rem,1.4vw+0.8rem,1.875rem)] font-bold leading-tight">
           {course.title}
         </h3>
         <p className={`mt-3 text-sm ${t.muted}`}>{course.description}</p>
