@@ -4,7 +4,8 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import CourseCard from "./CourseCard";
-import { courses } from "./courses.data";
+import { courses } from "./courses.data"
+import { motion } from "framer-motion";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -144,6 +145,51 @@ export default function CourseStack() {
       ref={rootRef}
       className="overflow-x-clip bg-#090843 px-3 pb-[40svh] pt-14 sm:px-6 md:pt-24"
     >
+      <div className="relative mb-20 mx-auto flex w-fit -translate-y-2 items-center justify-center px-6 py-2 sm:-translate-y-3 sm:px-8 sm:py-3">
+        <svg
+          className="pointer-events-none absolute inset-0 h-full w-full overflow-visible"
+          viewBox="0 0 100 40"
+          preserveAspectRatio="none"
+          fill="none"
+        >
+          <rect
+            x="1"
+            y="1"
+            width="98"
+            height="38"
+            rx="1"
+            fill="#2eb0a8"
+            fillOpacity="0.25"
+          />
+
+          <motion.rect
+            x="1"
+            y="1"
+            width="98"
+            height="38"
+            rx="1"
+            stroke="#2eb0a8"
+            strokeWidth="0.7"
+            opacity="0.7"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 0.7 }}
+            transition={{
+              duration: 1.2,
+              delay: 0.8,
+              ease: "easeInOut",
+            }}
+          />
+
+          <circle cx="1" cy="1" r="1.3" fill="#2eb0a8" />
+          <circle cx="99" cy="1" r="1.3" fill="#2eb0a8" />
+          <circle cx="1" cy="39" r="1.3" fill="#2eb0a8" />
+          <circle cx="99" cy="39" r="1.3" fill="#2eb0a8" />
+        </svg>
+
+        <h2 className="relative z-10 text-center font-sora  text-white sm:text-xl md:text-2xl lg:text-2xl xl:text-3xl">
+          COURSES
+        </h2>
+      </div>
       <div className="mx-auto w-full max-w-5xl">
         <h2 className="mx-auto mb-10 max-w-2xl text-center text-[clamp(1.375rem,3.2vw+0.5rem,2.5rem)] font-medium leading-tight md:mb-16">
           Not Sure Which Course Fits You? Don&apos;t Worry, We&apos;re Here To

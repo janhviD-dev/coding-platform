@@ -98,7 +98,7 @@ export default function WhyWeExist() {
             text-4xl
             sm:text-5xl
             md:text-6xl
-            lg:text-8xl
+            lg:text-6xl
             font-raleway
             font-semibold
             leading-[1.05]
